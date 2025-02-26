@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cast Selection Website</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 15px;
+            color: #34495e;
+        }
+        select, input[type="checkbox"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #333;
+            background-color: #ecf0f1;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+        select:focus, input[type="checkbox"]:focus {
+            border-color: #3498db;
+            background-color: #fff;
+            outline: none;
+        }
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #calculation-breakdown {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cast Selection</h1>
+    <form>
+        <!-- Cast Selection -->
+        <label for="cast">Cast:</label>
+        <select id="cast" name="cast">
+            <option value="SS">SS</option>
+            <option value="DSS">DSS</option>
+            <option value="HS">HS</option>
+            <option value="DHS">DHS</option>
+            <option value="1.5HS">1.5HS</option>
+            <option value="Minerva">Minerva</option>
+            <option value="Velpeau">Velpeau</option>
+            <option value="FBC">FBC</option>
+        </select>
+
+        <!-- Material Selection -->
+        <label for="material">Material:</label>
+        <select id="material" name="material">
+            <option value="Plaster">Plaster</option>
+            <option value="Fiberglass">Fiberglass</option>
+        </select>
+
+        <!-- Size Selection -->
+        <label for="size">Size:</label>
+        <select id="size" name="size">
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
+        </select>
+
+        <!-- Supplies Provided -->
+        <label>Supplies Provided:</label>
+        <div class="checkbox-label">
+            <input type="checkbox" id="supplies" name="supplies">
+            <label for="supplies">Check if supplies are provided</label>
+        </div>
+
+        <!-- Country Selection -->
+        <label for="country">Country:</label>
+        <select id="country" name="country">
+            <option value="Spain">Spain</option>
+            <option value="France">France</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Italy">Italy</option>
+            <option value="UK">UK</option>
+            <option value="Germany">Germany</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="Belgium">Belgium</option>
+        </select>
+
+        <!-- Days Selection -->
+        <label for="days">Days:</label>
+        <select id="days" name="days">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+
+        <!-- Submit Button -->
+        <button type="button" id="calculate-price">Calculate Price</button>
+
+        <!-- Display Total Price -->
+        <div id="total-price">Total Price: €0.00</div>
+
+        <!-- Display Calculation Breakdown -->
+        <div id="calculation-breakdown"></div>
+    </form>
+
+    <script>
+        // Price Table
+        const priceTable = {
+            // Fixed prices for each cast
+            castFixed: {
+                SS: 150,
+                DSS: 150,
+                HS: 200,
+                DHS: 200,
+                "1.5HS": 200,
+                Minerva: 150,
+                Velpeau: 150,
+                FBC: 300,
+            },
+
+            // Variable prices for castsize (cast + material + size combinations)
+            castsizeVariable: {
+                // SS Cast
+                "SS-Plaster-Small": 53,
+                "SS-Plaster-Medium": 69,
+                "SS-Plaster-Large": 85,
+                "SS-Fiberglass-Small": 69,
+                "SS-Fiberglass-Medium": 88,
+                "SS-Fiberglass-Large": 111,
+
+                // DSS Cast
+                "DSS-Plaster-Small": 71,
+                "DSS-Plaster-Medium": 91,
+                "DSS-Plaster-Large": 107,
+                "DSS-Fiberglass-Small": 88,
+                "DSS-Fiberglass-Medium": 117,
+                "DSS-Fiberglass-Large": 140,
+
+                // HS Cast
+                "HS-Plaster-Small": 67,
+                "HS-Plaster-Medium": 79,
+                "HS-Plaster-Large": 91,
+                "HS-Fiberglass-Small": 83,
+                "HS-Fiberglass-Medium": 100,
+                "HS-Fiberglass-Large": 117,
+
+                // DHS Cast
+                "DHS-Plaster-Small": 87,
+                "DHS-Plaster-Medium": 107,
+                "DHS-Plaster-Large": 123,
+                "DHS-Fiberglass-Small": 100,
+                "DHS-Fiberglass-Medium": 223,
+                "DHS-Fiberglass-Large": 140,
+
+                // 1.5HS Cast
+                "1.5HS-Plaster-Small": 79,
+                "1.5HS-Plaster-Medium": 95,
+                "1.5HS-Plaster-Large": 107,
+                "1.5HS-Fiberglass-Small": 100,
+                "1.5HS-Fiberglass-Medium": 123,
+                "1.5HS-Fiberglass-Large": 140,
+
+                // Minerva Cast
+                "Minerva-Plaster-Small": 53,
+                "Minerva-Plaster-Medium": 69,
+                "Minerva-Plaster-Large": 85,
+                "Minerva-Fiberglass-Small": 65,
+                "Minerva-Fiberglass-Medium": 88,
+                "Minerva-Fiberglass-Large": 112,
+
+                // Velpeau Cast
+                "Velpeau-Plaster-Small": 49,
+                "Velpeau-Plaster-Medium": 65,
+                "Velpeau-Plaster-Large": 49,
+                "Velpeau-Fiberglass-Small": 60,
+                "Velpeau-Fiberglass-Medium": 82,
+                "Velpeau-Fiberglass-Large": 95,
+
+                // FBC Cast
+                "FBC-Plaster-Small": 127,
+                "FBC-Plaster-Medium": 167,
+                "FBC-Plaster-Large": 207,
+                "FBC-Fiberglass-Small": 170,
+                "FBC-Fiberglass-Medium": 227,
+                "FBC-Fiberglass-Large": 285,
+            },
+
+            // Fixed prices for travel (based on supplies provided and country)
+            travelFixed: {
+                true: { // If supplies are provided
+                    Spain: 55,
+                    France: 131,
+                    Switzerland: 80,
+                    Portugal: 90,
+                    Italy: 168,
+                    UK: 75,
+                    Germany: 188,
+                    Netherlands: 195,
+                    Belgium: 180,
+                },
+                false: { // If supplies are not provided
+                    Spain: 150,
+                    France: 375,
+                    Switzerland: 150,
+                    Portugal: 90,
+                    Italy: 290,
+                    UK: 140,
+                    Germany: 325,
+                    Netherlands: 360,
+                    Belgium: 250,
+                },
+            },
+
+            // Fixed price for each country (used as daily rate)
+            countryFixed: {
+                Spain: 150,
+                France: 175,
+                Switzerland: 150,
+                Portugal: 150,
+                Italy: 200,
+                UK: 150,
+                Germany: 150,
+                Netherlands: 150,
+                Belgium: 150,
+            },
+        };
+
+        // Get DOM Elements
+        const castSelect = document.getElementById("cast");
+        const materialSelect = document.getElementById("material");
+        const sizeSelect = document.getElementById("size");
+        const suppliesCheckbox = document.getElementById("supplies");
+        const countrySelect = document.getElementById("country");
+        const daysSelect = document.getElementById("days");
+        const totalPriceDisplay = document.getElementById("total-price");
+        const calculationBreakdown = document.getElementById("calculation-breakdown");
+
+        // Function to Calculate Total Price
+        function calculatePrice() {
+            // Get selected values
+            const cast = castSelect.value;
+            const material = materialSelect.value;
+            const size = sizeSelect.value;
+            const supplies = suppliesCheckbox.checked;
+            const country = countrySelect.value;
+            const days = daysSelect.value;
+
+            // Calculate castsize price
+            const castsizeKey = `${cast}-${material}-${size}`;
+            const castFixedPrice = priceTable.castFixed[cast];
+            const castsizeVariablePrice = supplies ? 0 : priceTable.castsizeVariable[castsizeKey] || 0;
+            const castsizePrice = castFixedPrice + castsizeVariablePrice;
+
+            // Calculate travel price
+            const travelFixedPrice = priceTable.travelFixed[supplies][country];
+            const travelDailyPrice = priceTable.countryFixed[country] * days;
+            const travelPrice = travelFixedPrice + travelDailyPrice;
+
+            // Calculate total price
+            const totalPrice = castsizePrice + travelPrice;
+
+            // Display total price
+            totalPriceDisplay.textContent = `Total Price: €${totalPrice.toFixed(2)}`;
+
+            // Display calculation breakdown
+            calculationBreakdown.textContent = `
+                === Calculation Breakdown ===
+                Cast: ${cast} (Fixed Price: €${castFixedPrice})
+                Material: ${material}
+                Size: ${size}
+                Supplies Provided: ${supplies ? "Yes" : "No"}
+                Country: ${country}
+                Days: ${days}
+
+                === Castsize Calculation ===
+                Fixed Price (${cast}): €${castFixedPrice}
+                ${supplies ? "" : `Variable Price (${castsizeKey}): €${castsizeVariablePrice}`}
+                Total Castsize: €${castsizePrice}
+
+                === Travel Calculation ===
+                Fixed Price (${supplies ? "Supplies Provided" : "Supplies Not Provided"}, ${country}): €${travelFixedPrice}
+                Daily Rate (${country}): €${priceTable.countryFixed[country]} × ${days} days = €${travelDailyPrice}
+                Total Travel: €${travelPrice}
+
+                === Final Price ===
+                Total Castsize: €${castsizePrice}
+                Total Travel: €${travelPrice}
+                Final Price: €${totalPrice}
+            `;
+        }
+
+        // Add Event Listeners
+        castSelect.addEventListener("change", calculatePrice);
+        materialSelect.addEventListener("change", calculatePrice);
+        sizeSelect.addEventListener("change", calculatePrice);
+        suppliesCheckbox.addEventListener("change", calculatePrice);
+        countrySelect.addEventListener("change", calculatePrice);
+        daysSelect.addEventListener("change", calculatePrice);
+
+        // Initial Calculation
+        calculatePrice();
+    </script>
+</body>
+</html>
