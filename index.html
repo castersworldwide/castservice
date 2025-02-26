@@ -3,170 +3,596 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cast Selection Website</title>
+    <title>Eurocast by Castcraze</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-800: #343a40;
+        }
+        
+        * {
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6f9fc, #eef2f7);
+            color: var(--dark);
+            line-height: 1.6;
         }
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            margin-right: 0.8rem;
+            font-size: 2rem;
+            color: var(--accent);
+        }
+        
+        .hero {
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/api/placeholder/1200/400') center/cover;
+            filter: brightness(0.7);
+            z-index: -1;
+        }
+        
+        .hero-content {
+            text-align: center;
+            color: white;
+            z-index: 1;
+            padding: 0 1rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+        }
+        
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
         label {
-            font-weight: 600;
             display: block;
-            margin-top: 15px;
-            color: #34495e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-800);
         }
+        
+        .input-icon {
+            position: relative;
+        }
+        
+        .input-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
         select, input[type="checkbox"] {
             width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            border: 2px solid #bdc3c7;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--gray-300);
             border-radius: 8px;
             font-size: 1rem;
-            color: #333;
-            background-color: #ecf0f1;
-            transition: border-color 0.3s ease, background-color 0.3s ease;
+            color: var(--dark);
+            background-color: var(--light);
+            transition: all 0.3s ease;
         }
-        select:focus, input[type="checkbox"]:focus {
-            border-color: #3498db;
-            background-color: #fff;
+        
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
             outline: none;
         }
+        
         input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            margin-right: 0.8rem;
         }
+        
         .checkbox-label {
             display: flex;
             align-items: center;
-            margin-top: 10px;
         }
-        button {
+        
+        .btn {
             display: block;
             width: 100%;
-            padding: 12px;
-            background-color: #3498db;
-            color: #fff;
+            padding: 1rem;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 25px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        #total-price {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #27ae60;
+            transition: all 0.3s ease;
             text-align: center;
-            margin-top: 20px;
         }
-        #calculation-breakdown {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #ecf0f1;
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .price-display {
+            margin-top: 2rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .total-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+        }
+        
+        .calculation-breakdown {
+            background: var(--gray-100);
+            padding: 1rem;
             border-radius: 8px;
-            font-family: monospace;
-            white-space: pre-wrap;
+            font-size: 1rem;
+            color: var(--gray-800);
+            margin-top: 1rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 4rem;
+        }
+        
+        .feature-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-links h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .footer-links h3::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -0.5rem;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-300);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <h1>Cast Selection</h1>
-    <form>
-        <!-- Cast Selection -->
-        <label for="cast">Cast:</label>
-        <select id="cast" name="cast">
-            <option value="SS">SS</option>
-            <option value="DSS">DSS</option>
-            <option value="HS">HS</option>
-            <option value="DHS">DHS</option>
-            <option value="1.5HS">1.5HS</option>
-            <option value="Minerva">Minerva</option>
-            <option value="Velpeau">Velpeau</option>
-            <option value="FBC">FBC</option>
-        </select>
-
-        <!-- Material Selection -->
-        <label for="material">Material:</label>
-        <select id="material" name="material">
-            <option value="Plaster">Plaster</option>
-            <option value="Fiberglass">Fiberglass</option>
-        </select>
-
-        <!-- Size Selection -->
-        <label for="size">Size:</label>
-        <select id="size" name="size">
-            <option value="Small">Small</option>
-            <option value="Medium">Medium</option>
-            <option value="Large">Large</option>
-        </select>
-
-        <!-- Supplies Provided -->
-        <label>Supplies Provided:</label>
-        <div class="checkbox-label">
-            <input type="checkbox" id="supplies" name="supplies">
-            <label for="supplies">Check if supplies are provided</label>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-bone logo-icon"></i> Eurocast by Castcraze
+                </div>
+            </div>
         </div>
-
-        <!-- Country Selection -->
-        <label for="country">Country:</label>
-        <select id="country" name="country">
-            <option value="Spain">Spain</option>
-            <option value="France">France</option>
-            <option value="Switzerland">Switzerland</option>
-            <option value="Portugal">Portugal</option>
-            <option value="Italy">Italy</option>
-            <option value="UK">UK</option>
-            <option value="Germany">Germany</option>
-            <option value="Netherlands">Netherlands</option>
-            <option value="Belgium">Belgium</option>
-        </select>
-
-        <!-- Days Selection -->
-        <label for="days">Days:</label>
-        <select id="days" name="days">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-        </select>
-
-        <!-- Submit Button -->
-        <button type="button" id="calculate-price">Calculate Price</button>
-
-        <!-- Display Total Price -->
-        <div id="total-price">Total Price: €0.00</div>
-
-        <!-- Display Calculation Breakdown -->
-        <div id="calculation-breakdown"></div>
-    </form>
+    </header>
+    
+    <div class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Casts on demand</h1>
+            <p>Recreational casts without leaving your home</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Materials</h3>
+                    <p>Choose from high-quality plaster or fiberglass for great comfort</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-globe-europe"></i>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">European Coverage</h3>
+                    <p>Service available across multiple European countries</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-crutch"></i>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Integral Experience</h3>
+                    <p>Assistance during the time in the cast*</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Calculate Your Custom Cast Price</h2>
+                </div>
+                <div class="card-body">
+                    <form id="cast-form">
+                        <div class="form-group">
+                            <label for="cast">Cast Type:</label>
+                            <div class="input-icon">
+                                <i class="fas fa-ambulance"></i>
+                                <select id="cast" name="cast">
+                                    <option value="SS">SS</option>
+                                    <option value="DSS">DSS</option>
+                                    <option value="HS">HS</option>
+                                    <option value="DHS">DHS</option>
+                                    <option value="1.5HS">1.5HS</option>
+                                    <option value="Minerva">Minerva</option>
+                                    <option value="Velpeau">Velpeau</option>
+                                    <option value="FBC">FBC</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="material">Material:</label>
+                            <div class="input-icon">
+                                <i class="fas fa-toolbox"></i>
+                                <select id="material" name="material">
+                                    <option value="Plaster">Plaster</option>
+                                    <option value="Fiberglass">Fiberglass</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="size">Size:</label>
+                            <div class="input-icon">
+                                <i class="fas fa-ruler"></i>
+                                <select id="size" name="size">
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="checkbox-label">
+                                <input type="checkbox" id="supplies" name="supplies">
+                                <label for="supplies">Supplies are provided</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="country">Country:</label>
+                            <div class="input-icon">
+                                <i class="fas fa-globe"></i>
+                                <select id="country" name="country">
+                                    <option value="Spain">Spain</option>
+                                    <option value="France">France</option>
+                                    <option value="Switzerland">Switzerland</option>
+                                    <option value="Portugal">Portugal</option>
+                                    <option value="Italy">Italy</option>
+                                    <option value="UK">UK</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="Netherlands">Netherlands</option>
+                                    <option value="Belgium">Belgium</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="days">Number of Days:</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <select id="days" name="days">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="calculate-price" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i> Calculate Price
+                        </button>
+                        
+                        <div class="price-display">
+                            <div id="total-price" class="total-price">€0.00</div>
+                            <div id="calculation-breakdown" class="calculation-breakdown"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <i class="fas fa-bone logo-icon"></i> CastCraze
+                    </div>
+                    <p>Providing premium orthopedic cast solutions across Europe with mobile service and professional care.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h3>Cast Types</h3>
+                    <ul>
+                        <li><a href="#">Short Arm Cast</a></li>
+                        <li><a href="#">Long Arm Cast</a></li>
+                        <li><a href="#">Short Leg Cast</a></li>
+                        <li><a href="#">Long Leg Cast</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Healing Street, Barcelona</li>
+                        <li><i class="fas fa-phone"></i> +34 123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> info@castcraze.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2023 CastCraze. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Price Table
@@ -299,6 +725,7 @@
         const daysSelect = document.getElementById("days");
         const totalPriceDisplay = document.getElementById("total-price");
         const calculationBreakdown = document.getElementById("calculation-breakdown");
+        const calculateBtn = document.getElementById("calculate-price");
 
         // Function to Calculate Total Price
         function calculatePrice() {
@@ -308,7 +735,7 @@
             const size = sizeSelect.value;
             const supplies = suppliesCheckbox.checked;
             const country = countrySelect.value;
-            const days = daysSelect.value;
+            const days = parseInt(daysSelect.value);
 
             // Calculate castsize price
             const castsizeKey = `${cast}-${material}-${size}`;
@@ -324,37 +751,30 @@
             // Calculate total price
             const totalPrice = castsizePrice + travelPrice;
 
-            // Display total price
-            totalPriceDisplay.textContent = `Total Price: €${totalPrice.toFixed(2)}`;
+            // Display total price with animation
+            totalPriceDisplay.textContent = `€${totalPrice.toFixed(2)}`;
+            totalPriceDisplay.style.animation = 'none';
+            setTimeout(() => {
+                totalPriceDisplay.style.animation = 'fadeIn 0.5s ease';
+            }, 10);
 
             // Display calculation breakdown
-            calculationBreakdown.textContent = `
-                === Calculation Breakdown ===
-                Cast: ${cast} (Fixed Price: €${castFixedPrice})
-                Material: ${material}
-                Size: ${size}
-                Supplies Provided: ${supplies ? "Yes" : "No"}
-                Country: ${country}
-                Days: ${days}
-
-                === Castsize Calculation ===
-                Fixed Price (${cast}): €${castFixedPrice}
-                ${supplies ? "" : `Variable Price (${castsizeKey}): €${castsizeVariablePrice}`}
-                Total Castsize: €${castsizePrice}
-
-                === Travel Calculation ===
-                Fixed Price (${supplies ? "Supplies Provided" : "Supplies Not Provided"}, ${country}): €${travelFixedPrice}
-                Daily Rate (${country}): €${priceTable.countryFixed[country]} × ${days} days = €${travelDailyPrice}
-                Total Travel: €${travelPrice}
-
-                === Final Price ===
-                Total Castsize: €${castsizePrice}
-                Total Travel: €${travelPrice}
-                Final Price: €${totalPrice}
+            calculationBreakdown.innerHTML = `
+                <strong>Cast Cost:</strong> €${castFixedPrice} (base) + €${castsizeVariablePrice} (materials) = €${castsizePrice}<br>
+                <strong>Travel Cost:</strong> €${travelFixedPrice} (fixed) + €${travelDailyPrice} (€${priceTable.countryFixed[country]} × ${days} days) = €${travelPrice}<br>
+                <strong>Total:</strong> €${totalPrice.toFixed(2)}
             `;
+            
+            calculationBreakdown.style.animation = 'none';
+            setTimeout(() => {
+                calculationBreakdown.style.animation = 'fadeIn 0.5s ease';
+            }, 10);
         }
 
         // Add Event Listeners
+        calculateBtn.addEventListener("click", calculatePrice);
+        
+        // For real-time updates if preferred
         castSelect.addEventListener("change", calculatePrice);
         materialSelect.addEventListener("change", calculatePrice);
         sizeSelect.addEventListener("change", calculatePrice);
